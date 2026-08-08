@@ -1,20 +1,6 @@
-const { execSync } = require('child_process');
-
-// --- 1. التثبيت التلقائي للمكتبات في حال عدم وجودها ---
-try {
-    require.resolve('discord.js');
-    require.resolve('dotenv');
-} catch (e) {
-    console.log('[+] جاري تثبيت المكتبات المطلوبة تلقائياً...');
-    execSync('npm install discord.js dotenv', { stdio: 'inherit' });
-    console.log('[+] تم تثبيت المكتبات بنجاح!');
-}
-
-// --- 2. استدعاء المكتبات وتهيئة البيئة ---
 require('dotenv').config();
 const { Client, GatewayIntentBits, PermissionFlagsBits } = require('discord.js');
 
-// --- 3. جلب التوكنات والبادئات من متغيرات البيئة (Variables) ---
 const botsConfig = [
     {
         token: process.env.BOT_TOKEN_1,
@@ -30,10 +16,9 @@ const botsConfig = [
     }
 ];
 
-// --- 4. دالة تشغيل البوتات ---
 function createBot(config) {
     if (!config.token) {
-        console.error(`[-] خطأ: لم يتم العثور على التوكن في متغيرات البيئة!`);
+        console.error(`[-] خطأ: التوكن غير موجود في متغيرات البيئة!`);
         return;
     }
 
@@ -54,18 +39,15 @@ function createBot(config) {
         if (message.author.bot || !message.guild) return;
         if (!message.content.startsWith(config.prefix)) return;
 
-        // التحقق من صلاحية Administrator
         if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) return;
 
         const args = message.content.slice(config.prefix.length).trim().split(/ +/);
         const command = args.shift().toLowerCase();
 
-        // أمر Ping
         if (command === 'ping') {
             return message.reply('Pong!');
         }
 
-        // أمر Broadcast (obc)
         if (command === 'obc') {
             const broadcastMessage = args.join(' ');
 
@@ -85,7 +67,7 @@ function createBot(config) {
                     await member.send(broadcastMessage);
                     successCount++;
                 } catch (err) {
-                    // فشل الإرسال (مثلاً بسبب إغلاق الخاص)
+                    // فشل الإرسال (الخاص مغلق)
                 }
             }
 
@@ -94,9 +76,8 @@ function createBot(config) {
     });
 
     client.login(config.token).catch(err => {
-        console.error(`[-] تعذر تسجيل الدخول بالتوكن المدخل: ${err.message}`);
+        console.error(`[-] تعذر تسجيل الدخول بالتوكن: ${err.message}`);
     });
 }
 
-// تشغيل جميع البوتات
 botsConfig.forEach(config => createBot(config));
