@@ -1,6 +1,7 @@
-Enter{
-  "name": "discord-broadcast-bot",
+{
+  "name": "discord-bots",
   "version": "1.0.0",
+  "description": "Discord Broadcast Bots",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -8,8 +9,5 @@ Enter{
   "dependencies": {
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5"
-  },
-  "engines": {
-    "node": ">=18.0.0"
   }
 }
